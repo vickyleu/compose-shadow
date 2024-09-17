@@ -60,6 +60,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
@@ -90,7 +92,7 @@ fun DetailScreen(modifier: Modifier = Modifier) {
             Box(
                 modifier = Modifier
                     .size(appState.boxValues.size)
-                    .boxShadow(appState.shadowValues)
+                    .boxShadow(LocalDensity.current, appState.shadowValues)
                     .background(appState.boxValues.color, shape = appState.boxValues.shape),
             )
         }
@@ -201,7 +203,10 @@ fun PaneScaffold(
         }
 
         WindowWidthSizeClass.Expanded -> {
-            Row(modifier = modifier.background(background), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Row(
+                modifier = modifier.background(background),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxHeight().widthIn(max = maxWidthControls),
                     color = controlsBackground,
@@ -264,7 +269,13 @@ private fun ControlsSheet(
 
         title(text = "Shadow")
         with(state.shadowValues) {
-            dpSliderSection("Blur Radius", dp = blurRadius, onDpChange = state::blur, max = maxBoxSize, min = 0.dp)
+            dpSliderSection(
+                "Blur Radius",
+                dp = blurRadius,
+                onDpChange = state::blur,
+                max = maxBoxSize,
+                min = 0.dp
+            )
             dpSliderSection(
                 "Spread Radius",
                 dp = spreadRadius,
@@ -332,7 +343,13 @@ private fun LazyListScope.colorPicker(color: Color, onColorChange: () -> Unit) =
     }
 }
 
-private fun LazyListScope.dpSliderSection(title: String, dp: Dp, onDpChange: (Dp) -> Unit, min: Dp, max: Dp) = item {
+private fun LazyListScope.dpSliderSection(
+    title: String,
+    dp: Dp,
+    onDpChange: (Dp) -> Unit,
+    min: Dp,
+    max: Dp
+) = item {
     DpSliderSection(title = title, dp = dp, onDpChange = onDpChange, min = min, max = max)
 }
 
@@ -356,7 +373,12 @@ fun ShapeSelectorSection(
 }
 
 @Composable
-fun SwitchSection(title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
+fun SwitchSection(
+    title: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier,
         horizontalArrangement = SpaceBetween,
@@ -368,7 +390,14 @@ fun SwitchSection(title: String, checked: Boolean, onCheckedChange: (Boolean) ->
 }
 
 @Composable
-fun DpSliderSection(title: String, dp: Dp, onDpChange: (Dp) -> Unit, min: Dp, max: Dp, modifier: Modifier = Modifier) {
+fun DpSliderSection(
+    title: String,
+    dp: Dp,
+    onDpChange: (Dp) -> Unit,
+    min: Dp,
+    max: Dp,
+    modifier: Modifier = Modifier
+) {
     Column(modifier) {
         Text(title)
         DpSlider(dp, onDpChange, min = min, max = max)
@@ -433,7 +462,8 @@ fun Title(text: String, modifier: Modifier = Modifier) {
     Text(modifier = modifier, text = text, style = MaterialTheme.typography.headlineSmall)
 }
 
-private fun Modifier.boxShadow(shadowValues: ShadowValues) = boxShadow(
+private fun Modifier.boxShadow(density: Density, shadowValues: ShadowValues) = boxShadow(
+    density = density,
     blurRadius = shadowValues.blurRadius,
     color = shadowValues.color,
     spreadRadius = shadowValues.spreadRadius,

@@ -1,4 +1,8 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:Suppress("UnstableApiUsage")
+
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import java.util.*
 
 plugins {
@@ -8,19 +12,16 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.binaryCompatibility)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.publish)
 }
 
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xcontext-receivers")
     }
-    explicitApi()
-
-    androidTarget()
-
+    androidTarget{
+        publishLibraryVariants("release")
+    }
     jvm()
-
     listOf(
         iosX64(),
         iosArm64(),
@@ -53,6 +54,9 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
+    lint{
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -64,8 +68,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.jvmTarget.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.jvmTarget.get())
     }
     buildFeatures {
         compose = true
@@ -76,24 +80,5 @@ android {
     testOptions {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
     }
-}
-
-val localProperties = gradleLocalProperties(rootDir, providers)
-
-publishing {
-    repositories {
-        maven {
-            name = "githubPackages"
-            url = uri("https://maven.pkg.github.com/lennartegb/compose-shadow")
-            credentials {
-                username = localProperties["githubPackagesUsername"] as? String
-                password = localProperties["githubPackagesPassword"] as? String
-            }
-        }
-    }
-}
-
-mavenPublishing {
-    coordinates("dev.lennartegb.compose", "shadow", "0.1.0")
 }
 
