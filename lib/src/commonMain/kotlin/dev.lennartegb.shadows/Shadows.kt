@@ -128,8 +128,7 @@ private fun Canvas.clip(outline: Outline) {
     }
 }
 
-context(Density)
-private fun DpOffset.toOffset(density: Density): Offset = Offset(x.toPx(), y.toPx())
+private fun DpOffset.toOffset(density: Density): Offset = with(density){ Offset(x.toPx(), y.toPx())}
 
 private fun Canvas.translate(offset: Offset) {
     translate(dx = offset.x, dy = offset.y)
