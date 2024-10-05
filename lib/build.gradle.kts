@@ -18,6 +18,7 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xcontext-receivers")
     }
+    jvmToolchain(libs.versions.jvmTarget.get().toInt())
     androidTarget{
         publishLibraryVariants("release")
     }
