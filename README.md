@@ -31,14 +31,12 @@ Box(
 
 ## Installation
 
-To use compose-shadow in your project add the github package maven repository to your root `settings.gradle.kts`
+To use compose-shadow in your project add Maven Central to your root `settings.gradle.kts`
 
 ```kotlin
 dependencyResolutionManagement {
     repositories {
-        maven {
-            url = uri("https://maven.pkg.github.com/LennartEgb/compose-shadow")
-        }
+        mavenCentral()
     }
 }
 ```
@@ -49,7 +47,7 @@ and add the dependency to the module level `build.gradle.kts`
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("dev.lennartegb.compose:shadow:0.1.0")
+            implementation("com.vickyleu.kmp.shadow:compose-shadow:2.0.0")
         }
     }
 }
